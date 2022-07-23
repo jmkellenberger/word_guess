@@ -34,16 +34,26 @@ class WordGuess
 
   def get_guess
     guess = prompt(TEXT[0])
-    prompt(TEXT[1]) until guess.between?('a','z')
+    guess = prompt(TEXT[1]) until guess.between?('a','z')
     letters_guessed.push(guess)
     guess
-    @guesses_remaining -= 1
+  end
+
+  def parse_guess(guess)
+    correct = false
+    word.split('').each_with_index do |letter, index|
+      if guess == letter
+        @display[index] = guess
+        correct = true
+      end
+    end
+    @guesses_remaining -= 1 unless correct
   end
 
   def game_loop
     until guesses_remaining.zero? || display == word
       display_previous_attempts
-      get_guess
+      parse_guess(get_guess)
     end
     game_over
   end
